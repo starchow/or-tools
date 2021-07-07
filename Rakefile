@@ -6,7 +6,6 @@ task default: :test
 Rake::TestTask.new do |t|
   t.libs << "test"
   t.pattern = "test/**/*_test.rb"
-  t.warning = false
 end
 
 Rake::ExtensionTask.new("or-tools") do |ext|
@@ -26,8 +25,8 @@ task :update do
   require "open-uri"
   require "tmpdir"
 
-  version = "7.8.7959"
-  distributions = ["MacOsX-10.15.6", "ubuntu-20.04", "ubuntu-18.04", "ubuntu-16.04", "debian-10", "centos-8"]
+  version = "9.0.9048"
+  distributions = ["MacOsX-11.2.3", "ubuntu-20.04", "ubuntu-18.04", "debian-10", "centos-8", "centos-7"]
 
   short_version = version.split(".").first(2).join(".")
   distributions.each do |dist|
