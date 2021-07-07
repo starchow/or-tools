@@ -3,34 +3,43 @@ require "fileutils"
 require "net/http"
 require "tmpdir"
 
-version = "7.8.7959"
+version = "9.0.9048"
 
 if RbConfig::CONFIG["host_os"] =~ /darwin/i
-  filename = "or-tools_MacOsX-10.15.6_v#{version}.tar.gz"
-  checksum = "8d1d92105e962fab2fd7bde5843b711334a9f246dc22c51d41281898dbc1f69d"
+  filename = "or-tools_MacOsX-11.2.3_v#{version}.tar.gz"
+  checksum = "adf73a00d4ec49558b67be5ce3cfc8f30268da2253b35feb11d0d40700550bf6"
 else
   os = %x[lsb_release -is].chomp rescue nil
   os_version = %x[lsb_release -rs].chomp rescue nil
   if os == "Ubuntu" && os_version == "20.04"
     filename = "or-tools_ubuntu-20.04_v#{version}.tar.gz"
-    checksum = "40018cd573305cec76e12ff87e84d4ec18ce0823f265e4d75625bf3aefdea7c9"
+    checksum = "5565343c1c310d2885a40ce850ae7e3468299b3fee97ae8eed8425ce06bd4960"
   elsif os == "Ubuntu" && os_version == "18.04"
     filename = "or-tools_ubuntu-18.04_v#{version}.tar.gz"
-    checksum = "6e53e1a7b82b65b928617b9dce663778c5200de9366ad948948597dc763b1943"
-  elsif os == "Ubuntu" && os_version == "16.04"
-    filename = "or-tools_ubuntu-16.04_v#{version}.tar.gz"
-    checksum = "182cd4e2a1d2f29a9a81f2f90cb3e05cf1c0731c1a1e94c471d79a74dc09fff0"
+    checksum = "08cf548d0179f7fa814bb7458be94cd1b8a3de14985e6a9faf6118a1d8571539"
   elsif os == "Debian" && os_version == "10"
-    filename = "or-tools_debian-10_v#{version}.tar.gz "
-    checksum = "87dd294237095a7fea466c47789802b0a66c664fa1f79e6bbb2cd36323b409ca"
+    filename = "or-tools_debian-10_v#{version}.tar.gz"
+    checksum = "063fb1d8765ae23b0bb25b9c561e904532713416fe0458f7db45a0f72190eb50"
   elsif os == "CentOS" && os_version == "8"
     filename = "or-tools_centos-8_v#{version}.tar.gz"
-    checksum = "4e61bf2994fc767da1b4fd073f554c944d2c811609df4bc1afa6a2d876c05bb4"
+    checksum = "c98212ed4fc699d8ae70c1f53cd1d8dacd28e52970336fab5b86dedf7406f215"
+  elsif os == "CentOS" && os_version == "7"
+    filename = "or-tools_centos-7_v#{version}.tar.gz"
+    checksum = "b992bda4614bbc703583b0e9edcd2ade54bacfb9909399b20c8aa95ff7197d68"
   else
+    platform =
+      if Gem.win_platform?
+        "Windows"
+      elsif os || os_version
+        "#{os} #{os_version}"
+      else
+        "Unknown"
+      end
+
     # there is a binary download for Windows
     # however, it's compiled with Visual Studio rather than MinGW (which RubyInstaller uses)
     raise <<~MSG
-      Binary installation not available for this platform.
+      Binary installation not available for this platform: #{platform}
 
       Build the OR-Tools C++ library from source, then run:
       bundle config build.or-tools --with-or-tools-dir=/path/to/or-tools
@@ -44,7 +53,9 @@ url = "https://github.com/google/or-tools/releases/download/v#{short_version}/#{
 
 $stdout.sync = true
 
-def download_file(url, download_path)
+def download_file(url, download_path, redirects = 0)
+  raise "Too many redirects" if redirects > 10
+
   uri = URI(url)
   location = nil
 
@@ -73,7 +84,7 @@ def download_file(url, download_path)
   end
 
   # outside of Net::HTTP block to close previous connection
-  download_file(location, download_path) if location
+  download_file(location, download_path, redirects + 1) if location
 end
 
 # download

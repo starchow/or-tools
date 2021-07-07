@@ -14,7 +14,7 @@ class WeddingChartPrinter < ORTools::CpSolverSolutionCallback
   end
 
   def on_solution_callback
-    current_time = Time.now
+    # current_time = Time.now
     # puts "Solution %i, time = %f s, objective = %i" % [@num_solutions, current_time - @start_time, objective_value]
     @num_solutions += 1
 
@@ -29,7 +29,7 @@ class WeddingChartPrinter < ORTools::CpSolverSolutionCallback
   end
 end
 
-class ORToolsTest < Minitest::Test
+class ExamplesTest < Minitest::Test
   def test_sudoku
     model = ORTools::CpModel.new
 
@@ -150,6 +150,7 @@ class ORToolsTest < Minitest::Test
     end
 
     status = solver.solve
+    assert_equal :optimal, status
 
     assert_equal 3213, possible_tables.size
 
@@ -285,9 +286,6 @@ class ORToolsTest < Minitest::Test
     solver = ORTools::CpSolver.new
     solution_printer = WeddingChartPrinter.new(seats, names, num_tables, num_guests)
     solver.solve_with_solution_callback(model, solution_printer)
-
-    skip "Figure out why 7 solutions on Linux" if ci?
-
-    assert_equal 6, solution_printer.num_solutions
+    assert_equal 276, solver.objective_value
   end
 end

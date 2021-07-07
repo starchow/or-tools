@@ -18,6 +18,11 @@ require "or_tools/sat_int_var"
 require "or_tools/solver"
 require "or_tools/version"
 
+# solution printers
+require "or_tools/objective_solution_printer"
+require "or_tools/var_array_solution_printer"
+require "or_tools/var_array_and_objective_solution_printer"
+
 # higher level interfaces
 require "or_tools/basic_scheduler"
 require "or_tools/seating"

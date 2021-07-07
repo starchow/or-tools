@@ -1,6 +1,42 @@
-## 0.3.4 (unreleased)
+## 0.5.2 (unreleased)
+
+- Added `export_model_as_lp_format` and `export_model_as_mps_format` to `Solver`
+
+## 0.5.1 (2021-05-23)
+
+- Updated to Rice 4
+
+## 0.5.0 (2021-04-30)
+
+- Updated OR-Tools to 9.0
+- Added binary installation for CentOS 7
+- Added `sufficient_assumptions_for_infeasibility` to `CpSolver`
+
+## 0.4.3 (2021-03-26)
+
+- Added `add_assumption`, `add_assumptions`, and `clear_assumptions` to `CpModel`
+- Added `add_hint` and `clear_hints` to `CpModel`
+- Added `only_enforce_if` to `SatConstraint`
+- Fixed installation for Debian
+
+## 0.4.2 (2021-03-03)
+
+- Updated OR-Tools to 8.2
+
+## 0.4.1 (2021-02-23)
+
+- Added solution printers
+- Improved `inspect` and `to_s` for `CpModel`
+- Improved constraint construction
+
+## 0.4.0 (2021-01-14)
+
+- Updated OR-Tools to 8.1
+
+## 0.3.4 (2021-01-14)
 
 - Added support for time limit for `CpSolver`
+- Added `add_dimension_with_vehicle_transits` and `status` methods to `RoutingModel`
 
 ## 0.3.3 (2020-10-12)
 
